@@ -194,6 +194,43 @@ function findThirdLargest(tree) {
   }
 }
 
+function balancedBST(tree, depth = 0) {
+  let depthL = findDepth(tree.left)
+  let depthR = findDepth(tree.right)
+
+  let result = Math.abs(depthL - depthR);
+
+  return result >= 2;
+}
+
+function sameBST(arr1, arr2) {
+  if(arr1.length === 0 || arr2.length === 0) {
+    return true;
+  }
+
+  let higher1 = [];
+  let higher2 = [];
+  let lower1 = [];
+  let lower2 = [];
+
+  for (let i=1; i<arr1.length; i++) {
+    if (arr1[i] > arr1[0]) {
+      higher1.push(arr1[i])
+    } else {
+      lower1.push(arr1[i])
+    }
+  }
+
+  for (let j=1; j<arr2.length; j++) {
+    if (arr2[j] > arr2[0]) {
+      higher2.push(arr2[j])
+    } else {
+      lower2.push(arr2[j])
+    }
+  }
+
+  return sameBST(higher1, higher2) && sameBST(lower1, lower2)
+}
 
 
 function main() {
@@ -205,7 +242,7 @@ function main() {
   BST.insert(6, 6)
   BST.insert(9, 9)
   BST.insert(2, 2)
-  BST.insert(5, 5)
+  //BST.insert(5, 5)
   BST.insert(7, 7)
 
   // BST.insert(3, 3)
@@ -237,10 +274,14 @@ function main() {
   eBST.insert('O')
   eBST.insert('N')
 
+  let arr1 = [3, 5, 4, 6, 1, 0, 2];
+  let arr2 = [3, 1, 5, 2, 4, 6, 0];
+  console.log(sameBST(arr1, arr2))
 
   //console.log(findMax(BST))
-  console.log(findThirdLargest(BST).value)
+  //console.log(findThirdLargest(BST).value)
   // console.log(findDepth(eBST))
+  //console.log(balancedBST(BST))
 }
 
 main()
