@@ -8,12 +8,12 @@ class BinarySearchTree {
   }
 
   insert(key, value) {
-    if(this.key == null) {
+    if (this.key == null) {
       this.key = key;
       this.value = value;
     }
-    else if(key < this.key) {
-      if(this.left == null) {
+    else if (key < this.key) {
+      if (this.left == null) {
         this.left = new BinarySearchTree(key, value, this)
       }
       else {
@@ -21,7 +21,7 @@ class BinarySearchTree {
       }
     }
     else {
-      if(this.right == null) {
+      if (this.right == null) {
         this.right = new BinarySearchTree(key, value, this)
       }
       else {
@@ -31,13 +31,13 @@ class BinarySearchTree {
   }
 
   find(key) {
-    if(this.key == key) {
+    if (this.key == key) {
       return this.value;
     }
-    else if(key < this.key && this.left) {
+    else if (key < this.key && this.left) {
       return this.left.find(key)
     }
-    else if (key > this.key && this.right){
+    else if (key > this.key && this.right) {
       return this.right.find(key)
     }
     else {
@@ -73,9 +73,9 @@ class BinarySearchTree {
       throw new Error('Key Error')
     }
   }
-  
+
   _replaceWith(node) {
-    if(this.parent) {
+    if (this.parent) {
       if (this == this.parent.left) {
         this.parent.left = node;
       }
@@ -110,19 +110,168 @@ class BinarySearchTree {
   }
 }
 
+// this function sums all values in the tree
+function tree(t) {
+  // if t is null/undefined, return 0
+  if (!t) {
+    return 0;
+  }
+  // otherwise we recursively pull left and right values and add them to t.value
+  return tree(t.left) + t.value + tree(t.right)
+}
+
+function findDepth(tree, depth = 0) {
+  if (!tree) {
+    return depth;
+  }
+  if (tree.left || tree.right) {
+    depth++;
+  }
+  return findDepth(tree.left, depth) > findDepth(tree.right, depth) ? findDepth(tree.left, depth) : findDepth(tree.right, depth)
+}
+
+
+function isBST2(tree, min = Number.MIN_VALUE, max = Number.MAX_VALUE) {
+  if (min && tree.key < min) {
+    return false;
+  }
+  if (max && tree.key > max) {
+    return false;
+  } 
+  if (tree.left && !isBST2(tree.left, min, tree.key)) {
+    return false;
+  }
+  if (tree.right && !isBST2(tree.right, tree.key, max)) {
+    return false;
+  }
+  return true;
+}
+
+
+
+function isBST(tree, bstFlag = true) {
+  if (!tree) {
+    return bstFlag;
+  }
+  if (tree.left) {
+    if (tree.left.key > tree.key) {
+      bstFlag = false;
+      return bstFlag;
+    } else {
+      bstFlag = isBST(tree.left, bstFlag)
+    }
+  }
+  if (tree.right) {
+    // if (tree.parent && tree.right.key > tree.parent.key) {
+
+    //   bstFlag = false;
+    } else if (tree.right.key < tree.key) {
+      bstFlag = false;
+      return bstFlag;
+
+    } else {
+      bstFlag = isBST(tree.right, bstFlag)
+    }
+return bstFlag;
+}
+
+function findMax(tree) {
+  if (!tree.right) {
+    return tree;
+  }
+  return findMax(tree.right);
+}
+
+function findThirdLargest(tree) {
+  let max = findMax(tree);
+  if (max.left) {
+    return max.parent
+  }
+  if (max.parent.left) {
+    return max.parent.left
+  } else {
+    return max.parent.parent
+  }
+}
+
+
+
 function main() {
   let BST = new BinarySearchTree();
 
-  BST.insert(3)
-  BST.insert(1)
-  BST.insert(4)
-  BST.insert(6)
-  BST.insert(9)
-  BST.insert(2)
-  BST.insert(5)
-  BST.insert(7)
+  BST.insert(3, 3)
+  BST.insert(1, 1)
+  BST.insert(4, 4)
+  BST.insert(6, 6)
+  BST.insert(9, 9)
+  BST.insert(2, 2)
+  BST.insert(5, 5)
+  BST.insert(7, 7)
 
-  console.log(BST)
+  // BST.insert(3, 3)
+  // BST.insert(1, 1)
+  // BST.insert(4, 4)
+  // BST.insert(6, 6)
+  // // BST.insert(9, 9)
+  // BST.insert(2, 2)
+  // BST.insert(5, 5)
+  // BST.insert(7, 7)
+
+  //console.log(BST.right.right.key)
+
+  // BST.left.right.key = 10
+  //console.log(BST)
+  //console.log(BST.right.right.key)
+
+  let eBST = new BinarySearchTree();
+  eBST.insert('E')
+  eBST.insert('A')
+  eBST.insert('S')
+  eBST.insert('Y')
+  eBST.insert('Q')
+  eBST.insert('U')
+  eBST.insert('E')
+  eBST.insert('S')
+  eBST.insert('T')
+  eBST.insert('I')
+  eBST.insert('O')
+  eBST.insert('N')
+
+
+  //console.log(findMax(BST))
+  console.log(findThirdLargest(BST).value)
+  // console.log(findDepth(eBST))
 }
 
 main()
+
+                //    3
+                // /     \
+                // 1      4        1
+                //  \        \
+                //   2        6     2
+                //            \
+                //             9   3
+                //            /
+                //            7    4
+
+/*
+  if tree has right
+    move to right
+      call recursively
+      depth++
+  if tree has left
+    move to left
+      call recursively
+      depth++
+
+  if (!tree.left && !tree.right) {
+    let depth = 1;
+    return depth
+
+  }
+
+
+
+
+*/
